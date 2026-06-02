@@ -1,0 +1,79 @@
+cat <<'EOF' > log-collector-fixed.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: log-collector-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: log-collector-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: log-collector-binding
+subjects:
+- kind: ServiceAccount
+  name: log-collector-sa
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: log-collector-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: log-collector-fixed
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: log-collector-sa
+          containers:
+          - name: log-collector
+            image: mcr.microsoft.com/azure-cli
+            command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Starting log collection..."
+              apt-get install -y curl
+              curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+              chmod +x kubectl
+              mv kubectl /usr/local/bin/
+              PODS=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" 2>/dev/null)
+              echo "Found pods: $PODS"
+              for POD in $PODS; do
+                echo "Collecting logs for pod: $POD"
+                kubectl logs $POD > /tmp/${POD}-log.txt 2>&1
+                az storage blob upload \
+                  --account-name $STORAGE_ACCOUNT \
+                  --account-key "$STORAGE_KEY" \
+                  --container-name kubernetes-logs \
+                  --name ${POD}-$(date +%Y%m%d-%H%M%S).txt \
+                  --file /tmp/${POD}-log.txt \
+                  --overwrite
+                echo "Uploaded log for pod: $POD"
+              done
+              echo "Log collection completed!"
+            env:
+            - name: STORAGE_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  name: azure-storage-secret
+                  key: azurestorageaccountname
+            - name: STORAGE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: azure-storage-secret
+                  key: azurestorageaccountkey
+          restartPolicy: OnFailure
+EOF
