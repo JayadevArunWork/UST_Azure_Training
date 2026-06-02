@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>👑 Admin Panel</h2>
+
+<div class="row mt-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white p-4 text-center">
+            <h3>{{ total_users }}</h3>
+            <p>Total Users</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white p-4 text-center">
+            <h3>{{ total_insurance }}</h3>
+            <p>Total Policies</p>
+        </div>
+    </div>
+</div>
+
+<h4>All Insurance Records</h4>
+{% if insurance_list %}
+<table class="table table-bordered table-striped mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th>Customer Email</th>
+            <th>Policy Number</th>
+            <th>Type</th>
+            <th>Coverage</th>
+            <th>Premium</th>
+            <th>Nominee</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ins in insurance_list %}
+        <tr>
+            <td>{{ ins.email }}</td>
+            <td>{{ ins.policy_number }}</td>
+            <td>{{ ins.insurance_type }}</td>
+            <td>₹{{ ins.coverage_amount }}</td>
+            <td>₹{{ ins.premium }}/month</td>
+            <td>{{ ins.nominee }}</td>
+            <td>{{ ins.start_date }}</td>
+            <td>{{ ins.end_date }}</td>
+            <td><span class="badge bg-success">{{ ins.status }}</span></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">No insurance records found.</div>
+{% endif %}
+{% endblock %}

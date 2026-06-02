@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>👋 Welcome, {{ user.name }}</h2>
+<p class="text-muted">Email: {{ user.email }} | Phone: {{ user.phone }}</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white p-4 text-center">
+            <h3>{{ insurance_list|length }}</h3>
+            <p>Total Policies</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white p-4 text-center">
+            <h3>Active</h3>
+            <p>Account Status</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white p-4 text-center">
+            <h3><a href="/add_insurance" class="text-white">+ Add</a></h3>
+            <p>New Policy</p>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h4>Your Insurance Policies</h4>
+    {% if insurance_list %}
+    <table class="table table-bordered mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Policy Number</th>
+                <th>Type</th>
+                <th>Coverage</th>
+                <th>Premium</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ins in insurance_list %}
+            <tr>
+                <td>{{ ins.policy_number }}</td>
+                <td>{{ ins.insurance_type }}</td>
+                <td>₹{{ ins.coverage_amount }}</td>
+                <td>₹{{ ins.premium }}/month</td>
+                <td><span class="badge bg-success">{{ ins.status }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-info">No insurance policies found. <a href="/add_insurance">Add one now!</a></div>
+    {% endif %}
+</div>
+{% endblock %}

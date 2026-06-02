@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4">🛡️ Welcome to InsurePortal</h1>
+    <p class="lead">Manage your insurance policies easily and securely.</p>
+    <a href="/register" class="btn btn-primary btn-lg me-3">Get Started</a>
+    <a href="/login" class="btn btn-outline-secondary btn-lg">Login</a>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card text-center p-4">
+            <h3>🏥 Health Insurance</h3>
+            <p>Protect yourself and your family with comprehensive health coverage.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-4">
+            <h3>🚗 Car Insurance</h3>
+            <p>Drive with confidence with our complete car insurance plans.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-4">
+            <h3>🏠 Home Insurance</h3>
+            <p>Safeguard your home against unexpected damages and losses.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

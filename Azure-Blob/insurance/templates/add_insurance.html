@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card p-4">
+            <h2 class="text-center mb-4">➕ Add Insurance Policy</h2>
+            <form method="POST">
+                <div class="mb-3">
+                    <label>Insurance Type</label>
+                    <select name="insurance_type" class="form-control" required>
+                        <option value="">Select Type</option>
+                        <option>Health Insurance</option>
+                        <option>Car Insurance</option>
+                        <option>Home Insurance</option>
+                        <option>Life Insurance</option>
+                        <option>Travel Insurance</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label>Coverage Amount (₹)</label>
+                    <input type="number" name="coverage_amount" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Monthly Premium (₹)</label>
+                    <input type="number" name="premium" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Start Date</label>
+                    <input type="date" name="start_date" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>End Date</label>
+                    <input type="date" name="end_date" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Nominee Name</label>
+                    <input type="text" name="nominee" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Add Insurance</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>🛡️ My Insurance Policies</h2>
+<a href="/add_insurance" class="btn btn-primary mb-3">+ Add New Policy</a>
+
+{% if insurance_list %}
+<div class="row">
+    {% for ins in insurance_list %}
+    <div class="col-md-6 mb-4">
+        <div class="card p-4">
+            <h5>{{ ins.insurance_type }}</h5>
+            <p><strong>Policy No:</strong> {{ ins.policy_number }}</p>
+            <p><strong>Coverage:</strong> ₹{{ ins.coverage_amount }}</p>
+            <p><strong>Premium:</strong> ₹{{ ins.premium }}/month</p>
+            <p><strong>Start:</strong> {{ ins.start_date }}</p>
+            <p><strong>End:</strong> {{ ins.end_date }}</p>
+            <p><strong>Nominee:</strong> {{ ins.nominee }}</p>
+            <p><strong>Status:</strong>
+                <span class="badge bg-success">{{ ins.status }}</span>
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-warning">
+    No insurance policies found. <a href="/add_insurance">Add one now!</a>
+</div>
+{% endif %}
+{% endblock %}
