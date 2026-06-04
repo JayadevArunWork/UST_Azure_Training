@@ -1,4 +1,6 @@
 flask
-azure-storage-blob
-werkzeug
 gunicorn
+azure-storage-blob
+azure-servicebus
+requests
+werkzeug

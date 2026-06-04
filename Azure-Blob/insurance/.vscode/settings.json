@@ -31,5 +31,9 @@
         ".vscode{,/**}"
     ],
     "appService.defaultWebAppToDeploy": "/subscriptions/9df14662-7d45-4e90-8102-79f159cee3ed/resourceGroups/insurance-rg/providers/Microsoft.Web/sites/insurance-app-service",
-    "appService.deploySubpath": "."
+    "appService.deploySubpath": ".",
+    "azureFunctions.deploySubpath": "insurance_function",
+    "azureFunctions.projectLanguage": "Custom",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen"
 }

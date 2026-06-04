@@ -4,10 +4,24 @@
     <div class="col-md-7">
         <div class="card p-4">
             <h2 class="text-center mb-4">➕ Add Insurance Policy</h2>
-            <form method="POST">
+
+            {% if success %}
+            <div class="alert alert-success">
+                ✅ {{ success }}
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="alert alert-danger">
+                ❌ {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label>Insurance Type</label>
-                    <select name="insurance_type" class="form-control" required>
+                    <select name="insurance_type" 
+                            class="form-control" required>
                         <option value="">Select Type</option>
                         <option>Health Insurance</option>
                         <option>Car Insurance</option>
@@ -16,27 +30,58 @@
                         <option>Travel Insurance</option>
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <label>Coverage Amount (₹)</label>
-                    <input type="number" name="coverage_amount" class="form-control" required>
+                    <input type="number" 
+                           name="coverage_amount" 
+                           class="form-control" required>
                 </div>
+
                 <div class="mb-3">
                     <label>Monthly Premium (₹)</label>
-                    <input type="number" name="premium" class="form-control" required>
+                    <input type="number" 
+                           name="premium" 
+                           class="form-control" required>
                 </div>
+
                 <div class="mb-3">
                     <label>Start Date</label>
-                    <input type="date" name="start_date" class="form-control" required>
+                    <input type="date" 
+                           name="start_date" 
+                           class="form-control" required>
                 </div>
+
                 <div class="mb-3">
                     <label>End Date</label>
-                    <input type="date" name="end_date" class="form-control" required>
+                    <input type="date" 
+                           name="end_date" 
+                           class="form-control" required>
                 </div>
+
                 <div class="mb-3">
                     <label>Nominee Name</label>
-                    <input type="text" name="nominee" class="form-control" required>
+                    <input type="text" 
+                           name="nominee" 
+                           class="form-control" required>
                 </div>
-                <button type="submit" class="btn btn-success w-100">Add Insurance</button>
+
+                <div class="mb-3">
+                    <label>Upload Insurance Document</label>
+                    <input type="file" 
+                           name="document" 
+                           class="form-control"
+                           accept=".jpg,.jpeg,.png,.pdf"
+                           required>
+                    <small class="text-muted">
+                        Accepted formats: JPG, PNG, PDF
+                    </small>
+                </div>
+
+                <button type="submit" 
+                        class="btn btn-success w-100">
+                    Submit Insurance Application
+                </button>
             </form>
         </div>
     </div>
