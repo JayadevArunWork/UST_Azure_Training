@@ -1,0 +1,30 @@
+{
+  "allowedVMSizes": {
+    "type": "Array",
+    "metadata": {
+      "displayName": "Allowed VM Sizes",
+      "description": "List of allowed VM sizes"
+    },
+    "defaultValue": [
+      "Standard_D2_v3",
+      "Standard_D2_v4",
+      "Standard_D2s_v3",
+      "Standard_D2s_v4",
+      "Standard_D3_v2",
+      "Standard_D3_v3"
+    ]
+  },
+  "effect": {
+    "type": "String",
+    "metadata": {
+      "displayName": "Effect",
+      "description": "Deny blocks VM creation. Audit only reports."
+    },
+    "allowedValues": [
+      "Deny",
+      "Audit",
+      "Disabled"
+    ],
+    "defaultValue": "Deny"
+  }
+}
