@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-config
+  namespace: carenest-dev
+data:
+  GPT4O_DEPLOYMENT_NAME: gpt-4o
+  GPT4O_MINI_PRESCRIPTION_DEPLOYMENT: gpt-4o-mini-prescription
+  GPT4O_MINI_CHATBOT_DEPLOYMENT: gpt-4o-mini-chatbot

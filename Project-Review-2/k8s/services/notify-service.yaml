@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notify-service
+  namespace: carenest-dev
+spec:
+  selector:
+    app: notify-service
+  ports:
+  - port: 3004
+    targetPort: 3004

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-deployment
+  namespace: carenest-dev
+  labels:
+    app: ai-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-service
+  template:
+    metadata:
+      labels:
+        app: ai-service
+    spec:
+      serviceAccountName: carenest-sa
+      terminationGracePeriodSeconds: 30
+      initContainers:
+      - name: wait-for-cosmos
+        image: busybox:1.35
+        command: ['sh', '-c', 'until nslookup jd-carenest-cosmos.mongo.cosmos.azure.com; do echo waiting for cosmos; sleep 2; done;']
+      containers:
+      - name: ai-service
+        image: jdcarenestacr.azurecr.io/ai:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3005
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3005
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3005
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: carenest-secrets
+              key: MONGO_URI
+        envFrom:
+        - secretRef:
+            name: carenest-secrets
+        - configMapRef:
+            name: app-config
+        - configMapRef:
+            name: ai-config
+        volumeMounts:
+        - name: secrets-store-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "jd-carenest-kv-secrets"
