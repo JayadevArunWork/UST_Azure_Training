@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sentinel-app
+  labels:
+    app.kubernetes.io/part-of: sentinel
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sentinel-runtime-config
+  namespace: sentinel-app
+data:
+  SENTINEL_ENVIRONMENT: aks
+  SENTINEL_LOG_LEVEL: INFO
+  SENTINEL_ENTRA_AUDIENCE: REPLACE_ME_ENTRA_CLIENT_ID
+  SENTINEL_ENTRA_AUTHORITY_HOST: https://login.microsoftonline.com
+  SENTINEL_MICROSOFT_CLIENT_ID: REPLACE_ME_ENTRA_CLIENT_ID
+  SENTINEL_MICROSOFT_REDIRECT_URI: https://REPLACE_ME_DOMAIN/auth/callback
+  SENTINEL_FRONTEND_URL: https://REPLACE_ME_DOMAIN
+  SENTINEL_SESSION_COOKIE_NAME: sentinel_session
+  SENTINEL_SESSION_COOKIE_SECURE: "true"
+  SENTINEL_SESSION_TTL_SECONDS: "28800"
+  SENTINEL_ALLOWED_TENANTS: "[]"
+  SENTINEL_CORS_ORIGINS: '["https://REPLACE_ME_DOMAIN"]'
+  SENTINEL_IDENTITY_SERVICE_URL: http://identity-service.sentinel-app.svc.cluster.local
+  AZURE_TENANT_ID: REPLACE_ME_TENANT_ID
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: web
+  namespace: sentinel-app
+  annotations:
+    azure.workload.identity/client-id: REPLACE_ME_UAMI_CLIENT_ID
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: identity-service
+  namespace: sentinel-app
+  annotations:
+    azure.workload.identity/client-id: REPLACE_ME_UAMI_CLIENT_ID
+automountServiceAccountToken: true
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: identity-service-secrets
+  namespace: sentinel-app
+spec:
+  provider: azure
+  secretObjects:
+    - secretName: identity-service-runtime
+      type: Opaque
+      data:
+        - objectName: postgres-runtime-url
+          key: database-url
+        - objectName: internal-api-token
+          key: internal-api-token
+        - objectName: identity-microsoft-client-secret
+          key: microsoft-client-secret
+        - objectName: identity-session-signing-key
+          key: session-signing-key
+        - objectName: identity-token-encryption-key
+          key: token-encryption-key
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "false"
+    clientID: REPLACE_ME_UAMI_CLIENT_ID
+    keyvaultName: REPLACE_ME_KEY_VAULT_NAME
+    tenantId: REPLACE_ME_TENANT_ID
+    objects: |
+      array:
+        - |
+          objectName: postgres-runtime-url
+          objectType: secret
+        - |
+          objectName: internal-api-token
+          objectType: secret
+        - |
+          objectName: identity-microsoft-client-secret
+          objectType: secret
+        - |
+          objectName: identity-session-signing-key
+          objectType: secret
+        - |
+          objectName: identity-token-encryption-key
+          objectType: secret

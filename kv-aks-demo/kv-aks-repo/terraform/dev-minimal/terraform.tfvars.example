@@ -1,0 +1,14 @@
+name_suffix = "abc123"
+
+owner = "elzabeth"
+
+# Optional. Restrict the public AKS API endpoint to stable operator/CI CIDRs.
+aks_api_authorized_ip_ranges = [
+  "203.0.113.10/32",
+]
+
+# Optional. Use a plain IPv4 address, not CIDR notation.
+operator_postgres_ip = "203.0.113.10"
+
+# Supply the password at runtime instead:
+# $env:TF_VAR_postgres_admin_password = "DO_NOT_COMMIT"

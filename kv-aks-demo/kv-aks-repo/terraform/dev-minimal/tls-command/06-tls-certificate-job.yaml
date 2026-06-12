@@ -1,0 +1,72 @@
+﻿apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sentinel-tls-certificate
+  namespace: sentinel-app
+  labels:
+    app.kubernetes.io/name: sentinel-tls-certificate
+    app.kubernetes.io/part-of: sentinel
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sentinel-tls-certificate
+        app.kubernetes.io/part-of: sentinel
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: certbot
+          image: certbot/certbot:v5.6.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              certbot certonly \
+                --webroot \
+                --webroot-path=/acme \
+                --config-dir=/acme/letsencrypt \
+                --work-dir=/tmp/work \
+                --logs-dir=/tmp/logs \
+                --domain=sentinel.vaultrix.in \
+                --non-interactive \
+                --agree-tos \
+                --register-unsafely-without-email \
+                --keep-until-expiring &&
+              touch /acme/certificate-ready &&
+              sleep 600
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: acme-data
+              mountPath: /acme
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: acme-data
+          persistentVolumeClaim:
+            claimName: sentinel-acme-webroot
+        - name: tmp
+          emptyDir: {}
+

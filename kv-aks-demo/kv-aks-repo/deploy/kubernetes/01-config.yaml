@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sentinel-runtime-config
+  namespace: sentinel-app
+data:
+  SENTINEL_ENVIRONMENT: aks
+  SENTINEL_LOG_LEVEL: INFO
+  SENTINEL_ENTRA_AUDIENCE: ebad3d89-5d7e-4766-8859-6b10be8c48a7
+  SENTINEL_ENTRA_AUTHORITY_HOST: https://login.microsoftonline.com
+  SENTINEL_MICROSOFT_CLIENT_ID: ebad3d89-5d7e-4766-8859-6b10be8c48a7
+  SENTINEL_MICROSOFT_REDIRECT_URI: https://sentinel.vaultrix.in/auth/callback
+  SENTINEL_FRONTEND_URL: https://sentinel.vaultrix.in
+  SENTINEL_SESSION_COOKIE_NAME: sentinel_session
+  SENTINEL_SESSION_COOKIE_SECURE: "true"
+  SENTINEL_SESSION_TTL_SECONDS: "28800"
+  SENTINEL_ALLOWED_TENANTS: "[]"
+  SENTINEL_CORS_ORIGINS: '["https://sentinel.vaultrix.in"]'
+  SENTINEL_IDENTITY_SERVICE_URL: http://identity-service.sentinel-app.svc.cluster.local
+  SENTINEL_AUDIT_SERVICE_URL: http://audit-service.sentinel-app.svc.cluster.local
+  SENTINEL_RELATIONSHIP_SERVICE_URL: http://relationship-service.sentinel-app.svc.cluster.local
+  # Add SENTINEL_LOGIN_BLOB_ACCOUNT_URL with the Storage Account blob URL to record logins.
+  SENTINEL_LOGIN_BLOB_CONTAINER_NAME: sentinel-login-events
+  AZURE_TENANT_ID: 83474cb5-f1fa-4d06-906c-e5dad12ce3b9
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sentinel-runtime-config
+  namespace: sentinel-workers
+data:
+  SENTINEL_ENVIRONMENT: aks
+  SENTINEL_LOG_LEVEL: INFO
+  SENTINEL_ENTRA_AUDIENCE: ebad3d89-5d7e-4766-8859-6b10be8c48a7
+  SENTINEL_ENTRA_AUTHORITY_HOST: https://login.microsoftonline.com
+  SENTINEL_IDENTITY_SERVICE_URL: http://identity-service.sentinel-app.svc.cluster.local
+  SENTINEL_AUDIT_SERVICE_URL: http://audit-service.sentinel-app.svc.cluster.local
+  SENTINEL_RELATIONSHIP_SERVICE_URL: http://relationship-service.sentinel-app.svc.cluster.local
+  AZURE_TENANT_ID: 83474cb5-f1fa-4d06-906c-e5dad12ce3b9
