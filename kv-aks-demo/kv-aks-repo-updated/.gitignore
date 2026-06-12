@@ -1,0 +1,4 @@
+# Contains deployment secrets and must remain local.
+kubernetes/keyvault-valuesss.yaml
+sowrabhs 
+sowrabhs copy
