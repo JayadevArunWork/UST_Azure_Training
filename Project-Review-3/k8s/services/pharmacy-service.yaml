@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pharmacy-service
+  namespace: carenest-dev
+spec:
+  selector:
+    app: pharmacy-service
+  ports:
+  - port: 3003
+    targetPort: 3003

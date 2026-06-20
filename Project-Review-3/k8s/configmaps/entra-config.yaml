@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: entra-config
+  namespace: carenest-dev
+data:
+  # The sensitive Entra ID details are in the SecretProviderClass.
+  # This configmap is available for any non-sensitive entra config.
+  AUTH_METHOD: "entra-and-jwt"
